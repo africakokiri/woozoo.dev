@@ -20,7 +20,7 @@ export const Header = () => {
     <header className="flex justify-between">
       <div className="flex flex-col items-center font-extralight">
         <p className="text-3xl">{format(now, "HH:mm")}</p>
-        <p>{format(now, "M/dd (EE)")}</p>
+        <p>{format(now, "M/dd EEEE")}</p>
       </div>
 
       <DarkmodeSwitch />
