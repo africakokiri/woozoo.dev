@@ -5,8 +5,10 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
-  title: "",
-  description: ""
+  title: "WooZoo",
+  icons: {
+    icon: "space.svg"
+  }
 };
 
 export default function RootLayout({
