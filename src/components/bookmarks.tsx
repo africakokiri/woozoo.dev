@@ -121,7 +121,7 @@ py-3 shadow-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="hover:bg-red-400"
+                  className="hover:bg-red-400 dark:hover:bg-red-400"
                   onClick={(e) => {
                     e.preventDefault();
 
