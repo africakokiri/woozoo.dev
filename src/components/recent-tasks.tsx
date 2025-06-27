@@ -96,16 +96,23 @@ py-3 shadow-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
               >
                 <div className="flex items-center gap-4">
                   <h3 className="line-clamp-1 font-semibold">{task}</h3>
+                  <h4 className="line-clamp-1">{description}</h4>
                 </div>
 
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="hover:bg-red-400"
+                  className="hover:bg-red-400 dark:hover:bg-red-400"
                   onClick={(e) => {
                     e.preventDefault();
 
-                    deleteRecentTask(task, description);
+                    if (description) {
+                      deleteRecentTask(task, description);
+
+                      return;
+                    }
+
+                    deleteRecentTask(task, "");
                   }}
                 >
                   <XIcon />

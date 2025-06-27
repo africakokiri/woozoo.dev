@@ -44,12 +44,11 @@ interface RecentTaskStore {
   recentTasks: {
     task: string;
     description?: string;
-    createdAt: Date;
-    expiresAt: Date;
+    createdAt: number;
   }[];
 
-  addRecentTask: (task: string, expiresAt: Date, description?: string) => void;
-  deleteRecentTask: (task: string) => void;
+  addRecentTask: (task: string, description?: string) => void;
+  deleteRecentTask: (createdAt: number) => void;
 }
 
 export const useRecentTaskStore = create<RecentTaskStore>()(
@@ -57,21 +56,20 @@ export const useRecentTaskStore = create<RecentTaskStore>()(
     (set) => ({
       recentTasks: [],
 
-      addRecentTask: (task, expiresAt, description) =>
+      addRecentTask: (task, description) =>
         set((state) => ({
           recentTasks: [
             ...state.recentTasks,
             {
               task,
-              expiresAt,
-              createdAt: new Date(),
+              createdAt: Date.now(),
               description
             }
           ]
         })),
-      deleteRecentTask: (task) =>
+      deleteRecentTask: (createdAt) =>
         set((state) => ({
-          recentTasks: [...state.recentTasks.filter((recentTask) => recentTask.task !== task)]
+          recentTasks: [...state.recentTasks.filter((recentTask) => recentTask.createdAt !== createdAt)]
         }))
     }),
     {
