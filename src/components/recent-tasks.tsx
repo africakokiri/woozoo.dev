@@ -4,17 +4,27 @@ import { useRecentTaskStore } from "@/libs/zustand/store";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Modal } from "@/ui/modal";
+import { cn } from "@/utils/tailwind/cn";
 
 import { PlusIcon, SquareCheckBigIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const RecentTasks = () => {
   const [task, setTask] = useState("");
   const [noTask, setNoTask] = useState(false);
   const [description, setDescription] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [openDetailModal, setOpenDetailModal] = useState<number | null>(null);
 
   const { recentTasks, addRecentTask, deleteRecentTask } = useRecentTaskStore();
+
+  useEffect(() => {
+    if (!openModal) {
+      setTask("");
+      setDescription("");
+      setNoTask(false);
+    }
+  }, [openModal]);
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,7 +32,6 @@ export const RecentTasks = () => {
     // No Task
     if (!task) {
       setNoTask(true);
-
       return;
     }
 
@@ -33,6 +42,8 @@ export const RecentTasks = () => {
     setOpenModal(false);
   };
 
+  const selectedTask = recentTasks.find((task) => task.createdAt === openDetailModal);
+
   return (
     <div className="w-2/3 space-y-4">
       <div className="bg-element space-y-4 rounded-3xl border p-6 shadow-lg">
@@ -41,7 +52,6 @@ export const RecentTasks = () => {
             <SquareCheckBigIcon />
             Recent Tasks
           </h2>
-
           <Modal
             open={openModal}
             onOpenChange={setOpenModal}
@@ -63,7 +73,10 @@ export const RecentTasks = () => {
               <Input
                 value={task}
                 onChange={(e) => setTask(e.target.value)}
-                className="w-full !rounded-2xl border px-3 py-2"
+                className={cn(
+                  "w-full !rounded-2xl border px-3 py-2",
+                  noTask && "!border-red-500 focus-within:ring-red-500"
+                )}
                 placeholder="Task"
                 autoFocus
               />
@@ -73,7 +86,6 @@ export const RecentTasks = () => {
                 className="w-full !rounded-2xl border px-3 py-2"
                 placeholder="Description"
               />
-
               <Button
                 className="sr-only"
                 type="submit"
@@ -87,40 +99,45 @@ export const RecentTasks = () => {
 
       {recentTasks.length > 0 && (
         <div className="space-y-4">
-          {recentTasks.map(({ task, description, createdAt }, i) => {
-            return (
-              <div
-                key={`${task}-${createdAt}-${i}`}
-                className="bg-element flex items-center justify-between gap-2 rounded-3xl border px-6
-py-3 shadow-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
-              >
-                <div className="flex items-center gap-4">
-                  <h3 className="line-clamp-1 font-semibold">{task}</h3>
-                  <h4 className="line-clamp-1">{description}</h4>
-                </div>
-
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hover:bg-red-400 dark:hover:bg-red-400"
-                  onClick={(e) => {
-                    e.preventDefault();
-
-                    if (description) {
-                      deleteRecentTask(task, description);
-
-                      return;
-                    }
-
-                    deleteRecentTask(task, "");
-                  }}
-                >
-                  <XIcon />
-                </Button>
+          {recentTasks.map(({ task, description, createdAt }) => (
+            <div
+              key={createdAt}
+              onClick={() => setOpenDetailModal(createdAt)}
+              className="bg-element flex cursor-pointer items-center justify-between gap-2 rounded-3xl
+border px-6 py-3 shadow-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
+            >
+              <div className="flex items-center gap-4">
+                <h3 className="line-clamp-1 font-semibold">{task}</h3>
+                <h4 className="line-clamp-1">{description}</h4>
               </div>
-            );
-          })}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hover:bg-red-400 dark:hover:bg-red-400"
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteRecentTask(createdAt);
+                }}
+              >
+                <XIcon />
+              </Button>
+            </div>
+          ))}
         </div>
+      )}
+
+      {selectedTask && (
+        <Modal
+          open={!!selectedTask}
+          onOpenChange={(open) => {
+            if (!open) setOpenDetailModal(null);
+          }}
+          trigger={<></>}
+          title={selectedTask.task}
+          className="w-full max-w-xl"
+        >
+          <div>{selectedTask.description}</div>
+        </Modal>
       )}
     </div>
   );
