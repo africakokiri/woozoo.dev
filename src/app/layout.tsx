@@ -7,7 +7,7 @@ import { ThemeProvider } from "next-themes";
 export const metadata: Metadata = {
   title: "WooZoo",
   icons: {
-    icon: "space.svg"
+    icon: "/icons/space.svg"
   }
 };
 
