@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "@/ui/button";
+
 import { cn } from "../utils/tailwind/cn";
 
 import { XIcon } from "lucide-react";
@@ -70,10 +72,16 @@ justify-center backdrop-blur-xs"
               <div className="space-y-2">
                 <div className="flex w-full items-center justify-between">
                   <p className="text-xl font-bold">{title}</p>
-                  <XIcon
-                    className="h-5 w-5 cursor-pointer"
-                    onClick={() => handleSetOpen(false)}
-                  />
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                  >
+                    <XIcon
+                      className="h-5 w-5 cursor-pointer"
+                      onClick={() => handleSetOpen(false)}
+                    />
+                  </Button>
                 </div>
                 <p className="text-sm text-neutral-500">{description}</p>
               </div>
