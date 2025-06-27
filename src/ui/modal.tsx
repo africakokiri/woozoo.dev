@@ -89,7 +89,7 @@ export const Modal = ({
                       />
                     </Button>
                   </div>
-                  <p className="text-sm text-neutral-500">{description}</p>
+                  <p className="text-sm font-semibold text-red-400">{description}</p>
                 </div>
                 <div>{children}</div>
               </div>
