@@ -22,6 +22,7 @@ export const DarkmodeSwitch = () => {
     <Button
       variant="ghost"
       size="icon"
+      className="h-fit"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       {theme === "dark" ? (
