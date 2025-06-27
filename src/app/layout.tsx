@@ -21,7 +21,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} container mx-auto max-w-7xl antialiased`}>
         <ThemeProvider
           enableColorScheme={false}
           attribute="class"
