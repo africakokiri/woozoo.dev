@@ -39,3 +39,44 @@ export const useBookmarkStore = create<BookmarkStore>()(
     }
   )
 );
+
+interface RecentTaskStore {
+  recentTasks: {
+    task: string;
+    description?: string;
+    createdAt: Date;
+    expiresAt: Date;
+  }[];
+
+  addRecentTask: (task: string, expiresAt: Date, description?: string) => void;
+  deleteRecentTask: (task: string) => void;
+}
+
+export const useRecentTaskStore = create<RecentTaskStore>()(
+  persist(
+    (set) => ({
+      recentTasks: [],
+
+      addRecentTask: (task, expiresAt, description) =>
+        set((state) => ({
+          recentTasks: [
+            ...state.recentTasks,
+            {
+              task,
+              expiresAt,
+              createdAt: new Date(),
+              description
+            }
+          ]
+        })),
+      deleteRecentTask: (task) =>
+        set((state) => ({
+          recentTasks: [...state.recentTasks.filter((recentTask) => recentTask.task !== task)]
+        }))
+    }),
+    {
+      name: "recent-task",
+      storage: createJSONStorage(() => localStorage)
+    }
+  )
+);
