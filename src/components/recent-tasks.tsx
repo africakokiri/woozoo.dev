@@ -7,6 +7,7 @@ import { Modal } from "@/ui/modal";
 import { cn } from "@/utils/tailwind/cn";
 
 import { PlusIcon, SquareCheckBigIcon, XIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
 export const RecentTasks = () => {
@@ -126,19 +127,29 @@ border px-6 py-3 shadow-lg hover:bg-neutral-200 dark:hover:bg-neutral-700"
         </div>
       )}
 
-      {selectedTask && (
-        <Modal
-          open={!!selectedTask}
-          onOpenChange={(open) => {
-            if (!open) setOpenDetailModal(null);
-          }}
-          trigger={<></>}
-          title={selectedTask.task}
-          className="w-full max-w-xl"
-        >
-          <div>{selectedTask.description}</div>
-        </Modal>
-      )}
+      <AnimatePresence>
+        {selectedTask && (
+          <motion.div
+            initial={{ opacity: 0, y: 0 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            exit={{ opacity: 0, y: 0 }}
+            className="absolute top-0 left-0 h-screen w-screen backdrop-blur-xs"
+          >
+            <Modal
+              open={!!selectedTask}
+              onOpenChange={(open) => {
+                if (!open) setOpenDetailModal(null);
+              }}
+              trigger={<></>}
+              title={selectedTask.task}
+              className="bg-element w-full max-w-xl !rounded-3xl border p-6 shadow-lg"
+            >
+              <div>{selectedTask.description}</div>
+            </Modal>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
