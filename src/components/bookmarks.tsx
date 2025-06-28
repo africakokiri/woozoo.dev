@@ -5,10 +5,11 @@ import { getOpenGraph } from "@/server/getOpenGraph";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
 import { Modal } from "@/ui/modal";
+import { cn } from "@/utils/tailwind/cn";
 
 import { ExternalLink, PlusIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Bookmarks = () => {
   const [url, setUrl] = useState("");
@@ -16,6 +17,13 @@ export const Bookmarks = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { bookmarks, addBookmark, deleteBookmark } = useBookmarkStore();
+
+  useEffect(() => {
+    if (!openModal) {
+      setUrl("");
+      setErrorMessage("");
+    }
+  }, [openModal]);
 
   const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,7 +90,10 @@ export const Bookmarks = () => {
               <Input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full !rounded-2xl border px-3 py-2"
+                className={cn(
+                  "w-full !rounded-2xl border px-3 py-2",
+                  errorMessage && "!border-red-500 focus-within:ring-red-500"
+                )}
                 placeholder="URL"
                 autoFocus
               />
